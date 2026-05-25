@@ -5,7 +5,7 @@
 
 ## What You Are About to Build
 
-You spent 25 days learning the AWS data engineering stack. S3, Glue, Athena, Kinesis, Redshift, Databricks, Airflow, Snowflake — you know how to move data and transform it at scale.
+You spent 25 days learning the AWS/Azure data engineering stack with Databricks, Airflow, Snowflake — you know how to move data and transform it at scale. You also completed one week of Gen AI Foundations. 
 
 Now the question changes.
 
