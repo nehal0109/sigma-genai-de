@@ -74,4 +74,4 @@ python setup/preflight.py
 
 ---
 
-**If any step fails, ask in the class Slack channel. Don't wait.**
+**If any step fails, ask in the Trainer immediately. Don't wait.**
