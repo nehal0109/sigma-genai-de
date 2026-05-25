@@ -1,0 +1,63 @@
+version: 2
+
+mart_transactions:
+  description: "Mart containing aggregated transaction data with business metrics."
+  columns:
+    - name: transaction_id
+      description: "Unique identifier for each transaction."
+    - name: merchant_name
+      description: "Name of the merchant associated with the transaction."
+    - name: total_revenue
+      description: "Total revenue from completed transactions."
+      tests:
+        - generic_test:
+            name: "total_revenue_gte_zero"
+            expression: "total_revenue >= 0"
+    - name: failure_rate_pct
+      description: "Failure rate of transactions as a percentage."
+      tests:
+        - generic_test:
+            name: "failure_rate_between_0_and_100"
+            expression: "failure_rate_pct BETWEEN 0 AND 100"
+    - name: merchant_id
+      description: "Foreign key referencing dim_merchant."
+      tests:
+        - not_null
+    - name: failure_count
+      description: "Count of failed transactions."
+    - name: total_transactions
+      description: "Total number of transactions."
+  tests:
+    - generic_test:
+        name: "no_cancelled_status"
+        expression: "SUM(CASE WHEN status = 'CANCELLED' THEN 1 ELSE 0 END) = 0"
+```
+
+```sql
+WITH aggregated_transactions AS (
+  SELECT
+    ft.merchant_id,
+    dm.merchant_name,
+    SUM(CASE WHEN ft.status = 'COMPLETED' THEN ft.amount ELSE 0 END) AS total_revenue,
+    COUNT(CASE WHEN ft.status = 'FAILED' THEN 1 END) AS failure_count,
+    COUNT(*) AS total_transactions
+  FROM
+    {{ ref('fact_transactions') }} ft
+  JOIN
+    {{ ref('dim_merchant') }} dm
+  ON
+    ft.merchant_id = dm.merchant_id
+  GROUP BY
+    ft.merchant_id,
+    dm.merchant_name
+)
+
+SELECT
+  merchant_id,
+  merchant_name,
+  total_revenue,
+  (failure_count::DECIMAL / total_transactions::DECIMAL) * 100 AS failure_rate_pct,
+  failure_count,
+  total_transactions
+FROM
+  aggregated_transactions

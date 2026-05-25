@@ -29,11 +29,52 @@ HOW TO RUN:
 
 import boto3
 import json
+import os
 from datetime import datetime
+from pathlib import Path
 from sample_data import SCHEMA_COMPACT, BROKEN_QUERIES
 
-# ── CONFIGURATION ──────────────────────────────────────────
-bedrock = boto3.client('bedrock-runtime', region_name='us-east-1')
+# ── AWS CREDENTIALS LOADING ─────────────────────────────────
+# Load credentials from the repo-local aws_credentials.env file.
+# Supports both KEY=VALUE and "label - value" formats.
+
+def load_aws_credentials(env_path: Path) -> dict:
+    creds = {}
+    for raw_line in env_path.read_text().splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+
+        if "=" in line:
+            key, value = line.split("=", 1)
+        elif "-" in line:
+            key, value = line.split("-", 1)
+        else:
+            continue
+
+        key = key.strip().upper().replace(" ", "_")
+        value = value.strip()
+
+        if key in {"AWS_ACCESS_KEY_ID", "ACCESS_KEY", "ACCESS_KEY_ID"}:
+            creds["aws_access_key_id"] = value
+        elif key in {"AWS_SECRET_ACCESS_KEY", "SECRET_KEY", "SECRET_ACCESS_KEY"}:
+            creds["aws_secret_access_key"] = value
+
+    return creds
+
+env_file = Path(__file__).resolve().parents[1] / "aws_credentials.env"
+aws_credentials = load_aws_credentials(env_file) if env_file.exists() else {}
+if aws_credentials:
+    os.environ.setdefault("AWS_ACCESS_KEY_ID", aws_credentials.get("aws_access_key_id", ""))
+    os.environ.setdefault("AWS_SECRET_ACCESS_KEY", aws_credentials.get("aws_secret_access_key", ""))
+    session = boto3.Session(
+        aws_access_key_id=aws_credentials.get("aws_access_key_id"),
+        aws_secret_access_key=aws_credentials.get("aws_secret_access_key"),
+    )
+    bedrock = session.client('bedrock-runtime', region_name='us-east-1')
+else:
+    bedrock = boto3.client('bedrock-runtime', region_name='us-east-1')
+
 MODEL_ID = 'amazon.nova-lite-v1:0'
 
 
