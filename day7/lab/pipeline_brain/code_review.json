@@ -1,0 +1,102 @@
+{
+  "checkpoints": [
+    {
+      "id": 1,
+      "name": "IDEMPOTENCY",
+      "status": "FAIL",
+      "finding": "Some generated writes use append mode.",
+      "fix": "Delete the target date partition and write with overwrite."
+    },
+    {
+      "id": 2,
+      "name": "ERROR_HANDLING",
+      "status": "FAIL",
+      "finding": "Stage functions lack try/except boundaries.",
+      "fix": "Wrap each stage, log context, and re-raise."
+    },
+    {
+      "id": 3,
+      "name": "PARTITION_PRUNING",
+      "status": "PASS",
+      "finding": "Date filters are present on daily reads.",
+      "fix": "Keep partition filters before joins."
+    },
+    {
+      "id": 4,
+      "name": "ROW_COUNT_LOGGING",
+      "status": "WARN",
+      "finding": "No row count logging in the generated scaffold.",
+      "fix": "Log input, filtered, deduped, and output counts."
+    },
+    {
+      "id": 5,
+      "name": "BUSINESS_RULES",
+      "status": "PASS",
+      "finding": "Revenue uses COMPLETED transactions only.",
+      "fix": "Add tests to lock this behavior."
+    },
+    {
+      "id": 6,
+      "name": "NULL_HANDLING",
+      "status": "WARN",
+      "finding": "Primary key nulls are filtered; other critical nulls need checks.",
+      "fix": "Validate merchant_id, customer_id, and status."
+    },
+    {
+      "id": 7,
+      "name": "BROADCAST_HINT",
+      "status": "PASS",
+      "finding": "Merchant join uses broadcast.",
+      "fix": "Keep merchant dimension small or remove hint."
+    },
+    {
+      "id": 8,
+      "name": "HARDCODED_PATHS",
+      "status": "WARN",
+      "finding": "Main contains sample paths.",
+      "fix": "Read paths from config."
+    },
+    {
+      "id": 9,
+      "name": "SCHEMA_VALIDATION",
+      "status": "WARN",
+      "finding": "No explicit expected-column check.",
+      "fix": "Validate source columns before transforms."
+    },
+    {
+      "id": 10,
+      "name": "DEDUPLICATION",
+      "status": "PASS",
+      "finding": "Silver deduplicates by transaction_id.",
+      "fix": "Test latest ingestion_timestamp wins."
+    },
+    {
+      "id": 11,
+      "name": "METADATA_OUTPUT",
+      "status": "WARN",
+      "finding": "Generated scaffold lacks run metadata JSON.",
+      "fix": "Write run metadata at completion."
+    },
+    {
+      "id": 12,
+      "name": "IMPORTS",
+      "status": "PASS",
+      "finding": "Imports are explicit.",
+      "fix": "Avoid wildcard imports."
+    }
+  ],
+  "summary": {
+    "pass_count": 5,
+    "fail_count": 2,
+    "warn_count": 5,
+    "merge_recommendation": "APPROVE_WITH_CHANGES",
+    "top_3_fixes": [
+      "Replace append writes with delete-partition-then-overwrite.",
+      "Add stage-level error handling and re-raise exceptions.",
+      "Add run metadata and row count logging."
+    ]
+  },
+  "reviewed_file": "pipeline_brain/generated_pipeline.py",
+  "reviewed_at": "2026-05-26T12:28:34.740334+00:00",
+  "model": "amazon.nova-pro-v1:0"
+}

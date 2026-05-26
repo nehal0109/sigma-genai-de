@@ -1,0 +1,8 @@
+Module 5 review notes:
+
+Fixed two FAIL items from the generated pipeline review.
+
+1. Idempotency: replaced append-style daily writes with a delete-partition-then-overwrite pattern so rerunning the same date does not duplicate records.
+2. Error handling: wrapped Bronze and Silver stage logic in try/except blocks that log run context and re-raise exceptions, which keeps failures visible to orchestration.
+
+Remaining production hardening to consider: full schema validation, richer row count metrics, and externalized path configuration.

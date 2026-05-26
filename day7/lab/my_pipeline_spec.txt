@@ -1,0 +1,24 @@
+PIPELINE SPEC: Sigma DataTech Transaction Analytics Pipeline
+
+Objective: build a daily transaction analytics pipeline that prepares Bronze,
+Silver, and Gold data products for the morning dashboard by 04:00 UTC.
+
+Sources: transactions.csv and merchants.csv arrive daily. Transactions include
+transaction_id, merchant_id, customer_id, amount, status, payment_method, and
+transaction_date. Merchants include merchant_name, category, and city.
+
+Bronze: ingest raw CSV rows with all fields as strings, add ingestion metadata,
+and write Parquet partitioned by date.
+
+Silver: cast data types, remove null transaction_id values, remove negative
+amounts, deduplicate by transaction_id using the latest ingestion timestamp,
+join to merchants with a broadcast join, and add a CLEAN or UNMATCHED quality
+flag.
+
+Gold: produce merchant performance, customer lifetime value, and daily summary
+tables. Revenue must include only COMPLETED transactions. Failure rate is
+FAILED count divided by total transactions.
+
+Operations: every rerun for the same date must be idempotent, with partition
+pruning, row count logging, error handling, and run metadata written after each
+run.
