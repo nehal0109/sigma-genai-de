@@ -46,3 +46,4 @@ node_modules/
 
 .vercel
 .env*
+day6/aws_credentials.env
