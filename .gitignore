@@ -8,8 +8,8 @@ env/
 .env.local
 
 # API Keys and Credentials — NEVER COMMIT
-*secret*
-*credentials*
+secret
+credentials
 *.pem
 *.key
 *.p8
@@ -34,8 +34,15 @@ desktop.ini
 *.docx
 ~$*
 
+# # Student lab outputs — never commit trainer runs
+# agent_outputs/
+# output/
+
 # Temporary
 *.tmp
 .pytest_cache/
 *.log
 node_modules/
+
+.vercel
+.env*

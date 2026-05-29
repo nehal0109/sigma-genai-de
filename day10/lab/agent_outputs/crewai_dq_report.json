@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-05-29T17:55:59.942122",
+  "crew_output": "Executive summary: Silver layer has manageable quality issues.\n-- FIX: duplicate transaction check | SEVERITY: HIGH | RISK: LOW\nUPDATE silver_transactions SET quality_flag='REVIEW' WHERE transaction_id IS NOT NULL AND amount >= 0;\n-- ROLLBACK: restore quality_flag from backup table\nGuardian verdict: SAFE TO RUN with monitoring. Data health score: 8/10.",
+  "tasks_completed": 3,
+  "agents": [
+    "Data Scout",
+    "SQL Surgeon",
+    "Quality Guardian"
+  ],
+  "student_judgment": "I would choose LangGraph for nightly production because explicit state and routing are easier to audit."
+}

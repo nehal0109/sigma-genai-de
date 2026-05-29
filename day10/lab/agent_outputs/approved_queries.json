@@ -1,0 +1,12 @@
+[
+  {
+    "q": "Which payment methods are growing fastest this month compared to last month? Show percentage growth.",
+    "sql": "SELECT payment_method, COUNT(*) AS txn_count, SUM(amount) AS total_amount FROM silver_transactions WHERE transaction_date >= DATE '2024-01-01' GROUP BY payment_method ORDER BY txn_count DESC LIMIT 5",
+    "rounds": 1
+  },
+  {
+    "q": "Which 5 merchants have the highest refund rate? Show refund count and total transaction count.",
+    "sql": "SELECT payment_method, COUNT(*) AS txn_count, SUM(amount) AS total_amount FROM silver_transactions WHERE transaction_date >= DATE '2024-01-01' GROUP BY payment_method ORDER BY txn_count DESC LIMIT 5",
+    "rounds": 1
+  }
+]

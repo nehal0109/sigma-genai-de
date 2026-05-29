@@ -1,0 +1,6 @@
+*SIGMA DATATECH DATA QUALITY ALERT*
+*Date:*    2026-05-29
+*Status:*  WARNING
+*Issues:*  2 total - 0 critical, 1 high
+*Top fix:* Review duplicate and null-safe Silver quality checks.
+*Next review:* 2026-05-30
